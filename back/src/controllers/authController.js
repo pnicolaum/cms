@@ -31,21 +31,14 @@ export const register = async (req, res) => {
 
     const token = generateToken(user.id);
 
-    return res
-      .cookie("token", token, {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días
-      })
-      .status(201)
-      .json({
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          name: user.name,
-          createdAt: user.createdAt,
+    res.status(201).json({
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt,
       },
     });
   
@@ -58,7 +51,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log("Login request body:", req.body);
+  
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
   }
