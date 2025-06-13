@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface LoginFormData {
   email: string;
@@ -43,8 +42,6 @@ export function Login() {
         return;
       }
 
-      await AsyncStorage.setItem("user", JSON.stringify(data.user));
-      await AsyncStorage.setItem("token", data.token);
 
       // router.push("/"); // Redirige al home o dashboard
     } catch (error) {

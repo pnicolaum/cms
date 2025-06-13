@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface RegisterFormData {
   email: string;
@@ -47,8 +46,6 @@ export function Register() {
         alert(data.error || "Error desconocido");
         return;
       }
-      await AsyncStorage.setItem("user", JSON.stringify(data.user));
-      await AsyncStorage.setItem("token", data.token);
 
       // else router.push("/");
     } catch (error) {

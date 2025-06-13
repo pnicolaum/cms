@@ -1,5 +1,6 @@
 // src/app/api/auth/register/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,6 +20,12 @@ export async function POST(req: NextRequest) {
         { status: response.status }
       );
     }
+
+    (await cookies()).set("accessToken", data.token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60,
+      sameSite: "strict"
+    });
 
     return NextResponse.json({ success: true, data }, { status: 200 });
   } catch (error: any) {
