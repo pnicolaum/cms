@@ -26,7 +26,13 @@ export async function POST(req: NextRequest) {
       sameSite: "strict"
     });
 
-    return NextResponse.json({ success: true, data }, { status: 200 });
+    return NextResponse.json({
+      success: true,
+      data: {
+        user: data.user,
+        token: data.token,
+      }
+    }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message || 'Error interno del servidor' },
