@@ -37,13 +37,15 @@ export function Login() {
       });
 
       const data = await res.json();
+
       if (!res.ok || !data.success) {
         alert(data.error || "Credenciales incorrectas");
         return;
       }
 
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      // router.push("/"); // Redirige al home o dashboard
+      //  router.push("/"); // Redirige al home o dashboard
     } catch (error) {
       alert("Algo salió mal, intenta de nuevo");
       console.error(error);

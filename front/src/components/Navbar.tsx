@@ -1,10 +1,34 @@
+"use client";
+
 import Link from "next/link";
-// import DesktopNavbar from "./DesktopNavbar";
-// import MobileNavbar from "./MobileNavbar";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
-async function Navbar() {
-  // mirame si esta login, si no lo esta no pases el user al dektopnavbar
+type User = {
+  id: string;
+  username: string;
+  email: string;
+  name: string;
+  createdAt: string;
+};
+
+function Navbar() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData) as User;
+        if (parsedUser && parsedUser.name) {
+          setUser(parsedUser);
+        }
+      } catch (e) {
+        console.error("User data is not valid JSON", e);
+      }
+    }
+  }, []);
 
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
@@ -16,16 +40,20 @@ async function Navbar() {
             </Link>
           </div>
 
-          <Link href="/auth">
-            <Button variant="outline">
-              Login
-            </Button>
-          </Link>
-          {/* <DesktopNavbar /> */}
-          {/* <MobileNavbar /> */}
+          {user ? (
+            <div className="flex items-center gap-2">
+              <span className="text-sm">Hola, {user.name}</span>
+              <Button variant="outline">Logout</Button>
+            </div>
+          ) : (
+            <Link href="/auth">
+              <Button variant="outline">Login</Button>
+            </Link>
+          )}
         </div>
       </div>
     </nav>
   );
 }
+
 export default Navbar;

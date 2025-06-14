@@ -8,8 +8,7 @@ const generateToken = (userId) => {
 
 export const register = async (req, res) => {
   const { email, username, name, password } = req.body;
-  console.log("Login request body:", req.body);
-
+  
   if (!username || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }

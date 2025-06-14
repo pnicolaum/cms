@@ -20,7 +20,7 @@ export function Register() {
     name: "",
     username: "",
   });
-
+  
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +46,8 @@ export function Register() {
         alert(data.error || "Error desconocido");
         return;
       }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       // else router.push("/");
     } catch (error) {

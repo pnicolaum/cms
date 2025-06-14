@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     });
 
     const data = await response.json();
+
     if (!response.ok) {
       return NextResponse.json(
         { success: false, error: data.message || 'Error al iniciar sesión' }, 
@@ -22,16 +23,14 @@ export async function POST(req: NextRequest) {
 
     (await cookies()).set("accessToken", data.token, {
       httpOnly: true,
+      secure: true,
       maxAge: 7 * 24 * 60 * 60,
       sameSite: "strict"
     });
-
+    
     return NextResponse.json({
       success: true,
-      data: {
-        user: data.user,
-        token: data.token,
-      }
+      user: data.user,
     }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
