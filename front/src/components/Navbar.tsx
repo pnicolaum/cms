@@ -1,8 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { cookies } from 'next/headers';
 
 type User = {
   id: string;
@@ -12,23 +10,34 @@ type User = {
   createdAt: string;
 };
 
-function Navbar() {
-  const [user, setUser] = useState<User | null>(null);
+// Función para obtener usuario desde el backend
+async function getUser(): Promise<User | null> {
+  try {
+    const cookieStore = cookies();
+    const token = (await cookieStore).get('accessToken')?.value;
+    if (!token) return null;
 
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
+    const res = await fetch("http://localhost:4000/api/auth/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData) as User;
-        if (parsedUser && parsedUser.name) {
-          setUser(parsedUser);
-        }
-      } catch (e) {
-        console.error("User data is not valid JSON", e);
-      }
-    }
-  }, []);
+    if (!res.ok) return null;
+
+    const user = await res.json();
+
+    return user || null;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+}
+
+export default async function Navbar() {
+  const user = await getUser();
 
   return (
     <nav className="sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
@@ -55,5 +64,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default Navbar;

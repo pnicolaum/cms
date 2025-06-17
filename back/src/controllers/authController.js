@@ -80,3 +80,15 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const me = async (req, res) => {
+  const { id, email, username, name } = req.user;
+  
+  return res.status(200).json({
+    id,
+    email,
+    username,
+    name,
+  });
+    
+};
