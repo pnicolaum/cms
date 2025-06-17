@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { cookies } from 'next/headers';
+import { Logout } from "@/components/Logout";
 
 type User = {
   id: string;
@@ -52,7 +53,7 @@ export default async function Navbar() {
           {user ? (
             <div className="flex items-center gap-2">
               <span className="text-sm">Hola, {user.name}</span>
-              <Button variant="outline">Logout</Button>
+              <Logout/>
             </div>
           ) : (
             <Link href="/auth">
