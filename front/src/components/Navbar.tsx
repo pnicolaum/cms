@@ -1,36 +1,18 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 import { Logout } from "@/components/Logout";
+import { fetchWithAuth } from '@/lib/fetchWithAuth';
+import { User } from '@/types/index';
 
-type User = {
-  id: string;
-  username: string;
-  email: string;
-  name: string;
-  createdAt: string;
-};
-
-// Función para obtener usuario desde el backend
 async function getUser(): Promise<User | null> {
   try {
-    const cookieStore = cookies();
-    const token = (await cookieStore).get('accessToken')?.value;
-    if (!token) return null;
-
-    const res = await fetch("http://localhost:4000/api/auth/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!res.ok) return null;
+    const res = await fetchWithAuth('http://localhost:4000/api/auth/me');
+    if (!res || !res.ok) return null;
 
     const user = await res.json();
-
-    return user || null;
+    return user;
+    
   } catch (error) {
     console.error("Error fetching user:", error);
     return null;

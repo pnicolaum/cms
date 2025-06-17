@@ -1,11 +1,11 @@
-// src/app/api/auth/login/route.ts
+// src/app/api/auth/logout/route.ts
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { revalidatePath } from "next/cache";
 
 export async function POST() {
   try {
-
+    
     (await cookies()).delete('accessToken');
     revalidatePath("/");
     
