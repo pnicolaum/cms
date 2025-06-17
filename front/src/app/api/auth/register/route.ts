@@ -1,6 +1,7 @@
 // src/app/api/auth/register/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,6 +29,8 @@ export async function POST(req: NextRequest) {
       sameSite: "strict"
     });
 
+    revalidatePath("/");
+    
     return NextResponse.json({
       success: true,
       user: data.user,

@@ -1,6 +1,7 @@
 // src/app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,6 +28,8 @@ export async function POST(req: NextRequest) {
       maxAge: 7 * 24 * 60 * 60,
       sameSite: "strict"
     });
+    
+    revalidatePath("/");
     
     return NextResponse.json({
       success: true,

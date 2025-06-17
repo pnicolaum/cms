@@ -48,7 +48,8 @@ export function Register() {
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-
+      router.refresh();
+      window.location.href = "/";
       // else router.push("/");
     } catch (error) {
       alert("Algo salió mal, intenta de nuevo");

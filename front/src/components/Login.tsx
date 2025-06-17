@@ -44,7 +44,8 @@ export function Login() {
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-
+      router.refresh();
+      window.location.href = "/";
       //  router.push("/"); // Redirige al home o dashboard
     } catch (error) {
       alert("Algo salió mal, intenta de nuevo");
