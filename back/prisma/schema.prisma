@@ -5,15 +5,111 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id String @id @default(cuid())
-  email String @unique
-  username String @unique
-  name String?
-  password String
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  name      String?
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // orders    Order[]
 }
+
+model Product {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  stock       Int
+  imageUrl    String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  category    Category       @relation(fields: [categoryId], references: [id])
+  categoryId  String
+
+  type        ProductType    @relation(fields: [typeId], references: [id])
+  typeId      String
+
+  colors      ProductColor[]
+
+  // OrderItems  OrderItem[]
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String    @unique  // Ej: "hombre", "mujer", "niño"
+  products Product[]
+}
+
+
+model Size {
+  id          String       @id @default(cuid())
+  label       String       // Ej: "S", "M", "40"
+
+  type        ProductType  @relation(fields: [typeId], references: [id])
+  typeId      String       // ← Relación directa con tipo
+}
+
+model ProductType {
+  id       String            @id @default(cuid())
+  name     String            @unique  // Ej: "camiseta", "zapato"
+
+  products Product[]
+  sizes    Size[]
+}
+
+
+model Color {
+  id     String          @id @default(cuid())
+  name   String          // Ej: "Negro", "Blanco", "Rojo"
+  hexCode String         // "#000000", etc.
+
+  products ProductColor[]
+}
+
+model ProductColor {
+  productId String
+  colorId   String
+
+  product Product @relation(fields: [productId], references: [id])
+  color   Color   @relation(fields: [colorId], references: [id])
+
+  @@id([productId, colorId]) // clave compuesta para evitar duplicados
+}
+
+/*
+model Order {
+  id         String       @id @default(cuid())
+  user       User         @relation(fields: [userId], references: [id])
+  userId     String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  total      Float
+  status     OrderStatus  @default(PENDING)
+
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  unitPrice Float
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  CANCELLED
+}
+*/
