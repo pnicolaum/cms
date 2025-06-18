@@ -43,10 +43,15 @@ export function Login() {
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      const expirationDate = new Date();
+      expirationDate.setSeconds(expirationDate.getSeconds() + 604800);
+
+      localStorage.setItem("user", JSON.stringify({
+        ...data.user,
+        tokenExpiresAt: expirationDate.toISOString(), // Guardamos la fecha exacta en formato ISO
+      }));
       router.refresh();
       window.location.href = "/";
-      //  router.push("/"); // Redirige al home o dashboard
     } catch (error) {
       alert("Algo salió mal, intenta de nuevo");
       console.error(error);

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
-// import { cookies } from 'next/headers';
 import { Logout } from "@/components/Logout";
 import { fetchWithAuth } from '@/lib/fetchWithAuth';
 import { User } from '@/types/index';

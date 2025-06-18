@@ -10,6 +10,7 @@ export function Logout() {
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
+    localStorage.removeItem("user");
     router.refresh();
     window.location.href = "/";
   }
