@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { User } from '@/types/index';
+import { Carousel } from '@/components/Carousel';
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
@@ -25,8 +26,14 @@ export default function Home() {
   }, []);
 
   return (
+    <>
     <h1>
       Hello - Project CMS {user ? user.name : 'Guest'}
     </h1>
+    <br />
+    <br />
+    
+    <Carousel/>
+    </>
   );
 }
