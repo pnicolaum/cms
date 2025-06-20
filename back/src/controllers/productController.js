@@ -64,7 +64,7 @@ export const getAllProducts = async (req, res) => {
         },
         color: true,
         size: true,
-        group: true,
+        productGroup: true,
       },
     });
     res.json(products);
@@ -85,7 +85,7 @@ export const getProductById = async (req, res) => {
         },
         color: true,
         size: true,
-        group: true,
+        productGroup: true,
       },
     });
 

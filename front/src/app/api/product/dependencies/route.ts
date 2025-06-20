@@ -4,17 +4,15 @@ import { revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
-    console.log("Fetching product dependencies...");
     const response = await fetch('http://localhost:4000/api/product/dependencies', {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
     });
 
     const data = await response.json();
 
     if (!response.ok) {
       return NextResponse.json(
-        { success: false, error: data.message || 'Error al crear el producto' }, 
+        { success: false, error: data.message || 'Error al obtener dependencias del producto' }, 
         { status: response.status }
       );
     }

@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { Category, Type, Color, ProductGroup } from "@/types";
 
 type ProductFormData = {
   name: string;
@@ -20,11 +21,7 @@ type ProductFormData = {
   group: string;
 };
 
-type Category = { id: string; name: string };
-type Size = { id: string; name: string };
-type Type = { id: string; name: string; sizes: Size[] };
-type Color = { id: string; name: string; hexCode: string };
-type ProductGroup = { id: string; slug: string };
+
 
 export default function CreateProduct() {
   const [formData, setFormData] = useState<ProductFormData>({
@@ -105,7 +102,7 @@ export default function CreateProduct() {
         alert(data.error || "Fallo");
         return;
       }
-
+      
       router.refresh();
       window.location.href = "/admin";
     } catch (error) {
