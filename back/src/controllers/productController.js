@@ -44,8 +44,16 @@ const validateProductInput = async ({ category, type, size, color }) => {
   };
 };
 
+export const generateSlug = (text) => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\_]+/g, '-')           // espacios o guiones bajos por guiones
+    .replace(/[^\w\-]+/g, '')           // quitar caracteres especiales
+    .replace(/\-\-+/g, '-')             // evitar múltiples guiones seguidos
+    .replace(/^-+|-+$/g, '');           // quitar guiones al inicio o fin
+};
 
-// Obtener todos los productos
 export const getAllProducts = async (req, res) => {
   try {
     const products = await prisma.product.findMany({
@@ -56,6 +64,7 @@ export const getAllProducts = async (req, res) => {
         },
         color: true,
         size: true,
+        group: true,
       },
     });
     res.json(products);
@@ -64,9 +73,6 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-
-
-// Obtener un producto por ID
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -79,6 +85,7 @@ export const getProductById = async (req, res) => {
         },
         color: true,
         size: true,
+        group: true,
       },
     });
 
@@ -90,9 +97,6 @@ export const getProductById = async (req, res) => {
   }
 };
 
-
-
-// Crear un nuevo productoimport { prisma } from "../generated/prisma";
 export const createProduct = async (req, res) => {
   try {
     const {
@@ -105,6 +109,7 @@ export const createProduct = async (req, res) => {
       type,
       color,
       size,
+      group
     } = req.body;
 
     const {
@@ -114,6 +119,18 @@ export const createProduct = async (req, res) => {
       existingColor,
     } = await validateProductInput({ category, type, size, color });
 
+    const groupSlug  = generateSlug(group);
+    
+    let groupRecord = await prisma.productGroup.findUnique({
+      where: { slug: groupSlug },
+    });
+
+    if (!groupRecord) {
+      groupRecord = await prisma.productGroup.create({
+        data: { slug: groupSlug },
+      });
+    }
+
     const product = await prisma.product.create({
       data: {
         name,
@@ -121,10 +138,11 @@ export const createProduct = async (req, res) => {
         price,
         stock,
         imageUrl,
-        category: { connect: { id: existingCategory.id } },
-        type:     { connect: { id: existingType.id } },
-        size:     { connect: { id: existingSize.id } },
-        color:    { connect: { id: existingColor.id } },
+        category:     { connect: { id: existingCategory.id } },
+        type:         { connect: { id: existingType.id } },
+        size:         { connect: { id: existingSize.id } },
+        color:        { connect: { id: existingColor.id } },
+        productGroup: { connect: { id: groupRecord.id } },
       },
       include: {
         category: true,
@@ -141,11 +159,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-
-
-
-
-// Actualizar producto
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
   const {
@@ -196,10 +209,6 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-
-
-
-// Eliminar producto
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
@@ -210,10 +219,8 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-
 export const getProductDependencies = async (req, res) => {
   try {
-    console.log("Fetching product dependencies...");
     const categories = await prisma.category.findMany({
       select: { id: true, name: true },
     });
@@ -232,10 +239,15 @@ export const getProductDependencies = async (req, res) => {
       select: { id: true, name: true, hexCode: true },
     });
 
+    const groups = await prisma.productGroup.findMany({
+      select: { id: true, slug: true},
+    });
+
     res.json({
       categories,
       types,
       colors,
+      groups
     });
   } catch (error) {
     console.error('Error al obtener info de productos:', error);
