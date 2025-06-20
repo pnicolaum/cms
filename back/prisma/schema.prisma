@@ -9,73 +9,89 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  email      String   @unique
+  username   String   @unique
+  name       String?
+  password   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // orders    Order[]
 }
 
 model Product {
-  id          String         @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  stock       Int
-  imageUrl    String?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id            String         @id @default(cuid())
+  name          String
+  description   String?
+  price         Float
+  stock         Int
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  category    Category       @relation(fields: [categoryId], references: [id])
-  categoryId  String
+  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId    String
 
-  type        ProductType    @relation(fields: [typeId], references: [id])
-  typeId      String
+  type          ProductType    @relation(fields: [typeId], references: [id])
+  typeId        String
 
-  color      Color           @relation(fields: [colorId], references: [id])
-  colorId    String         
+  color         Color          @relation(fields: [colorId], references: [id])
+  colorId       String         
 
-  size       Size            @relation(fields: [sizeId], references: [id])
-  sizeId     String
+  size          Size           @relation(fields: [sizeId], references: [id])
+  sizeId        String
+
+  productGroup  ProductGroup   @relation(fields: [groupId], references: [id])
+  groupId       String
+
   // OrderItems  OrderItem[]
 }
 
 model Category {
-  id       String    @id @default(cuid())
-  name     String    @unique  // Ej: "hombre", "mujer", "niño"
-  products Product[]
+  id        String    @id @default(cuid())
+  name      String    @unique  // Ej: "hombre", "mujer", "niño"
+  products  Product[]
 }
 
 model Size {
-  id          String       @id @default(cuid())
-  name        String       @unique // Ej: "S", "M", "40"
+  id    String           @id @default(cuid())
+  name  String           @unique // Ej: "S", "M", "40"
 
-  type        ProductType  @relation(fields: [typeId], references: [id])
-  typeId      String       // ← Relación directa con tipo
+  type      ProductType  @relation(fields: [typeId], references: [id])
+  typeId    String       // ← Relación directa con tipo
 
-  products    Product[]
+  products  Product[]
 }
 
 model ProductType {
-  id       String            @id @default(cuid())
-  name     String            @unique  // Ej: "camiseta", "zapato"
+  id        String       @id @default(cuid())
+  name      String       @unique  // Ej: "camiseta", "zapato"
 
-  products Product[]
-  sizes    Size[]
+  products  Product[]
+  sizes     Size[]
 }
-
 
 model Color {
-  id     String          @id @default(cuid())
-  name   String          @unique // Ej: "Negro", "Blanco", "Rojo"
-  hexCode String         // "#000000", etc.
+  id       String      @id @default(cuid())
+  name     String      @unique // Ej: "Negro", "Blanco", "Rojo"
+  hexCode  String      // "#000000", etc.
 
   products Product[]
 }
+
+model ProductGroup {
+  id        String    @id @default(cuid())
+  slug      String    @unique // Para usar en URLs: "camiseta-pcpro"
+  products  Product[] // Relación uno a muchos
+}
+
+// model ProductGroup {
+//   id        String    @id @default(cuid())
+//   name      String    // Ej: "Camiseta PC Pro"
+//   slug      String    @unique // Para usar en URLs: "camiseta-pcpro"
+//   products  Product[] 
+// }
 
 
 

@@ -210,3 +210,35 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+
+export const getProductDependencies = async (req, res) => {
+  try {
+    console.log("Fetching product dependencies...");
+    const categories = await prisma.category.findMany({
+      select: { id: true, name: true },
+    });
+
+    const types = await prisma.productType.findMany({
+      select: {
+        id: true,
+        name: true,
+        sizes: {
+          select: { id: true, name: true },
+        },
+      },
+    });
+
+    const colors = await prisma.color.findMany({
+      select: { id: true, name: true, hexCode: true },
+    });
+
+    res.json({
+      categories,
+      types,
+      colors,
+    });
+  } catch (error) {
+    console.error('Error al obtener info de productos:', error);
+    res.status(500).json({ error: 'Error al obtener info de productos.' });
+  }
+};
