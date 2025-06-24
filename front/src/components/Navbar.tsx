@@ -30,6 +30,14 @@ export default async function Navbar() {
               CMS
             </Link>
           </div>
+          <div className="flex items-center gap-3">
+            <Link href="/admin" className="text-xl font-bold text-primary font-mono tracking-wider">
+              Admin
+            </Link>
+            <Link href="/shop" className="text-xl font-bold text-primary font-mono tracking-wider">
+              Shop
+            </Link>
+          </div>
 
           {user ? (
             <div className="flex items-center gap-2">

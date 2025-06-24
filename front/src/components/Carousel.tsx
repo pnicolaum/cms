@@ -9,7 +9,7 @@ const prods = [
   { id: '5', name: 'Producto 5', description: 'Descripción del producto 5' },
 ];
 
-export const Carousel = () => {
+export function Carousel() {
   const [startIndex, setStartIndex] = useState(0);
   const visibleCount = 3;
 
