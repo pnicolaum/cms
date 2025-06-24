@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ProductCard } from "@/components/ProductCard"
+import { ProductCard } from "@/components/product"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Product, Category, Type, Color, ProductGroup } from "@/types"
 

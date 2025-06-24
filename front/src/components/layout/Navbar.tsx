@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { Logout } from "@/components/Logout";
+import { Button } from "../ui/button";
+import { Logout } from "@/components/auth";
 import { fetchWithAuth } from '@/lib/fetchWithAuth';
 import { User } from '@/types/index';
 

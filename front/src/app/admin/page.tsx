@@ -1,8 +1,8 @@
 "use client"
 
 
-import { Carousel } from '@/components/Carousel';
-import CreateProduct from '@/components/CreateProduct';
+import { Carousel } from '@/components/product/Carousel';
+import CreateProduct from '@/components/product/CreateProduct';
  
 
 

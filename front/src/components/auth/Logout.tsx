@@ -2,7 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 // import { redirect } from "next/navigation";
 
 export function Logout() {
@@ -21,3 +21,5 @@ export function Logout() {
     </Button>
   );
 }
+
+export default Logout;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { User } from '@/types/index';
-import { Carousel } from '@/components/Carousel';
+import { Carousel } from '@/components/product';
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);

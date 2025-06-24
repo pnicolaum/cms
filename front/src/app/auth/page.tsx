@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Login } from "@/components/Login";
-import { Register } from "@/components/Register";
+import { Login, Register } from "@/components/auth";
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);

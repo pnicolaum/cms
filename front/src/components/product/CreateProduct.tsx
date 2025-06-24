@@ -23,7 +23,7 @@ type ProductFormData = {
 
 
 
-export default function CreateProduct() {
+export function CreateProduct() {
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -298,3 +298,5 @@ export default function CreateProduct() {
     </Card>
   );
 }
+
+export default CreateProduct;

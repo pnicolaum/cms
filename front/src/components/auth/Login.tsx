@@ -6,21 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
-interface RegisterFormData {
+interface LoginFormData {
   email: string;
   password: string;
-  name: string;
-  username: string;
 }
 
-export function Register() {
-  const [form, setForm] = useState<RegisterFormData>({
+export default function Login() {
+  const [form, setForm] = useState<LoginFormData>({
     email: "",
     password: "",
-    name: "",
-    username: "",
   });
-  
+
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +30,7 @@ export function Register() {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -43,7 +39,7 @@ export function Register() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        alert(data.error || "Error desconocido");
+        alert(data.error || "Credenciales incorrectas");
         return;
       }
 
@@ -54,7 +50,6 @@ export function Register() {
         ...data.user,
         tokenExpiresAt: expirationDate.toISOString(), // Guardamos la fecha exacta en formato ISO
       }));
-
       router.refresh();
       window.location.href = "/";
     } catch (error) {
@@ -65,26 +60,6 @@ export function Register() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name" className="mb-2">Nombre</Label>
-        <Input
-          id="name"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <Label htmlFor="username" className="mb-2">Usuario</Label>
-        <Input
-          id="username"
-          name="username"
-          value={form.username}
-          onChange={handleChange}
-          required
-        />
-      </div>
       <div>
         <Label htmlFor="email" className="mb-2">Correo electrónico</Label>
         <Input
@@ -108,7 +83,7 @@ export function Register() {
         />
       </div>
       <Button type="submit" className="w-full">
-        Registrarse
+        Iniciar sesión
       </Button>
     </form>
   );

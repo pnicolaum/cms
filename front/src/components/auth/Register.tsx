@@ -6,17 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
-interface LoginFormData {
+interface RegisterFormData {
   email: string;
   password: string;
+  name: string;
+  username: string;
 }
 
-export function Login() {
-  const [form, setForm] = useState<LoginFormData>({
+export function Register() {
+  const [form, setForm] = useState<RegisterFormData>({
     email: "",
     password: "",
+    name: "",
+    username: "",
   });
-
+  
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +34,7 @@ export function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -39,7 +43,7 @@ export function Login() {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        alert(data.error || "Credenciales incorrectas");
+        alert(data.error || "Error desconocido");
         return;
       }
 
@@ -50,6 +54,7 @@ export function Login() {
         ...data.user,
         tokenExpiresAt: expirationDate.toISOString(), // Guardamos la fecha exacta en formato ISO
       }));
+
       router.refresh();
       window.location.href = "/";
     } catch (error) {
@@ -60,6 +65,26 @@ export function Login() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Label htmlFor="name" className="mb-2">Nombre</Label>
+        <Input
+          id="name"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="username" className="mb-2">Usuario</Label>
+        <Input
+          id="username"
+          name="username"
+          value={form.username}
+          onChange={handleChange}
+          required
+        />
+      </div>
       <div>
         <Label htmlFor="email" className="mb-2">Correo electrónico</Label>
         <Input
@@ -83,8 +108,10 @@ export function Login() {
         />
       </div>
       <Button type="submit" className="w-full">
-        Iniciar sesión
+        Registrarse
       </Button>
     </form>
   );
 }
+
+export default Register;

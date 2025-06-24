@@ -63,3 +63,5 @@ export function ProductCard({
     </Card>
   )
 }
+
+export default ProductCard
