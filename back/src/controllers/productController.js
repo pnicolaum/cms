@@ -56,22 +56,111 @@ export const generateSlug = (text) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await prisma.product.findMany({
+    const groups = await prisma.productGroup.findMany({
       include: {
-        category: true,
-        type: {
-          include: { sizes: true },
+        products: {
+          include: {
+            category: true,
+            type: true,
+            color: true,
+            size: true,
+          },
         },
-        color: true,
-        size: true,
-        productGroup: true,
+      },
+    })
+
+    const groupedProducts = groups
+      .filter(group => group.products.length > 0)
+      .map(group => {
+        const representative = group.products[0] // o usa lógica para elegir el principal
+
+        return {
+          id: representative.id,
+          name: representative.name,
+          description: representative.description,
+          price: representative.price,
+          stock: representative.stock,
+          imageUrl: representative.imageUrl,
+          category: representative.category,
+          type: representative.type,
+          color: representative.color,
+          size: representative.size,
+          slug: group.slug,
+
+          // Lista de colores disponibles
+          availableColors: group.products.map(p => ({
+            id: p.id,
+            name: p.color.name,
+            hexCode: p.color.hexCode,
+          })),
+        }
+      })
+
+    res.json(groupedProducts)
+  } catch (error) {
+    console.error('Error al obtener productos:', error)
+    res.status(500).json({ error: 'Error al obtener productos.' })
+  }
+}
+export const getProductBySlugAndColor = async (req, res) => {
+  const { slug, color: colorName } = req.params;
+
+  if (!slug || !colorName) {
+    return res.status(400).json({ error: "Faltan parámetros slug o color" });
+  }
+
+  try {
+    const color = await prisma.color.findUnique({
+      where: { name: colorName },
+    });
+
+    if (!color) {
+      return res.status(404).json({ error: "Color no encontrado" });
+    }
+
+    const group = await prisma.productGroup.findUnique({
+      where: { slug },
+      include: {
+        products: {
+          where: {
+            colorId: color.id,
+          },
+          include: {
+            category: true,
+            type: true,
+            color: true,
+            size: true,
+          },
+        },
       },
     });
-    res.json(products);
+
+    if (!group || group.products.length === 0) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    const product = group.products[0];
+
+    res.json({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      imageUrl: product.imageUrl,
+      category: product.category,
+      type: product.type,
+      color: product.color,
+      size: product.size,
+      slug,
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener productos.' });
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener el producto" });
   }
 };
+
+
 
 export const getProductById = async (req, res) => {
   try {
